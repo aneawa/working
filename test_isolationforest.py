@@ -200,8 +200,6 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                 normal_rate = n_normal / len(X_normal)
                 k = int(np.ceil(len(X_normal) * normal_rate))
                 X_normal = random.sample(X_normal, k) #ランダムに抽出
-        print("anegawa")
-
 
 
         cutter_anomaly = len(X_anomaly) * rate
