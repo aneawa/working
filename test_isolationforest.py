@@ -10,6 +10,7 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import roc_auc_score
 from sklearn.decomposition import PCA
+from sklearn import metrics
 
 import scipy.io
 import h5py
@@ -41,13 +42,23 @@ def calc_accuracy(X_rabel, X_pred, treeLabel): #精度計算(Accuracy)
 
 
 def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
-    a = np.array(label)
     fpr, tpr, thresholds = roc_curve(label, pred)
+    if math.isnan(fpr[0]): #ネガティブのデータがないならfprは0にしてもいいよね…
+        for i in range(len(fpr)):
+            fpr[i] = 0
+    if math.isnan(tpr[0]): #ネガティブのデータがないならfprは0にしてもいいよね…
+        for i in range(len(tpr)):
+            tpr[i] = 0
     score = auc(fpr, tpr)
-    # print("auc2 : "+ str(roc_auc_score(label, pred)))
+    # score = roc_auc_score(label, pred)
     if not treeLabel:
         print("AUC score: " + str(score))
+        # print("auc2 : " + str(score))
         print("")
+
+    if math.isnan(score):
+        raise Exception("error! auc is NaN!")
+    # #------------------------------
     # print("fpr :" + str(fpr))
     # print("tpr :" + str(tpr))
     # print(score)
@@ -57,12 +68,7 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
     # plt.xlabel("False Positive Rate")
     # plt.ylabel("True Positive Rate")
     # plt.show()
-    if math.isnan(score):
-        for i in range(len(label)):
-            if label[i] == -1:
-                print(label)
 
-        raise Exception("error! auc is NaN!")
     return score
 
 #filename        : ファイル名(データ名) string
@@ -188,23 +194,6 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             else:
                 X_normal.append(X[i])
 
-        #異常系含有率を変更
-        if anomaly_rate is not None:
-            if clf.contamination != anomaly_rate:
-                if clf.contamination > anomaly_rate:#異常系を減らす
-                    k = int(np.ceil(len(X_normal) * (anomaly_rate / (1- anomaly_rate))))
-                    anomaly = random.sample(X_anomaly, k) #ランダムに抽出
-                    X_anomaly = anomaly
-
-
-                else:#正常系をへらす
-                    n_normal = np.ceil(len(X_anomaly) / anomaly_rate) - len(X_anomaly)
-                    normal_rate = n_normal / len(X_normal)
-                    k = int(np.ceil(len(X_normal) * normal_rate))
-                    X_normal = random.sample(X_normal, k) #ランダムに抽出
-                clf.contamination = anomaly_rate
-
-
         cutter_anomaly = len(X_anomaly) * rate
         cutter_normal = len(X_normal) * rate
         X_sepa_ano = []
@@ -218,18 +207,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             tail = int(cutter_anomaly * (i+1)) - 1
             X_sepa_ano.append(X_anomaly[head:tail+1])
 
-        # if anomaly_rate is not None:
-        #     if clf.contamination > anomaly_rate:#異常系を減らす
-        #         for i in range(len(X_sepa_ano)):
-        #             k = len(X_sepa_ano[i]) * anomaly_rate
-        #             X_sepa_ano[i] = random.sample(X_sepa_ano[i], k) #ランダムに抽出
-        #     else:
-        #         for i in range(len(X_sepa_nor)):#正常系をへらす
-        #             n_normal = np.ceil(len(X_sepa_ano[i]) * 1 / anomaly_rate) - len(X_sepa_ano)
-        #             normal_rate = n_normal / len(X_sepa_nor)
-        #             k = len(X_sepa_nor[i]) * normal_rate
-        #             X_sepa_nor[i] = random.sample(X_sepa_nor[i], k) #ランダムに抽出
-        #     print("anegawa")
+
 
     else:
         X_sepa = []
@@ -251,15 +229,27 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             X_test = []
             X_test_correct = []
 
+            # 学習データの異常系含有率を変更
             for i in range(cross_count):
-                if i != count:
-                    X_train.extend(X_sepa_nor[i])
-                    for j in range(len(X_sepa_nor[i])):
-                        X_train_correct.append(1)
+                if anomaly_rate is not None:
+                    if clf.contamination != anomaly_rate:
+                        if clf.contamination > anomaly_rate: #異常系を減らす
+                            k = int(np.ceil(len(X_sepa_nor[i]) * (anomaly_rate / (1 - anomaly_rate))))
+                            X_sepa_ano[i] = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
+                        else : #正常系を減らす
+                            n_normal = np.ceil(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
+                            normal_rate = n_normal / len(X_sepa_nor[i])
+                            k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
+                            X_sepa_nor[i] = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
 
+                if i != count:
                     X_train.extend(X_sepa_ano[i])
                     for j in range(len(X_sepa_ano[i])):
                         X_train_correct.append(-1)
+
+                    X_train.extend(X_sepa_nor[i])
+                    for j in range(len(X_sepa_nor[i])):
+                        X_train_correct.append(1)
 
                 else:
                     # print(i, 222222)
