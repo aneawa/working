@@ -42,34 +42,38 @@ def calc_accuracy(X_rabel, X_pred, treeLabel): #精度計算(Accuracy)
 
 
 def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
-    fpr, tpr, thresholds = roc_curve(label, pred)
-    if math.isnan(fpr[0]): #ネガティブのデータがないならfprは0にしてもいいよね…
-        for i in range(len(fpr)):
-            fpr[i] = 0
-    if math.isnan(tpr[0]): #ネガティブのデータがないならfprは0にしてもいいよね…
-        for i in range(len(tpr)):
-            tpr[i] = 0
-    score = auc(fpr, tpr)
-    # score = roc_auc_score(label, pred)
+    roc = False
+    if roc:
+        fpr, tpr, thresholds = roc_curve(label, pred)
+        score_roc = auc(fpr, tpr)
+        # score_roc = roc_auc_score(label, pred)
+        # #------------------------------
+        # print("fpr :" + str(fpr))
+        # print("tpr :" + str(tpr))
+        # print(score_roc)
+        # plt.figure(figsize=(8, 6))
+        # plt.plot(fpr, tpr)
+        # plt.title("ROC curve")
+        # plt.xlabel("False Positive Rate")
+        # plt.ylabel("True Positive Rate")
+        # plt.show()
+    else:
+        (precision, recall, _) = metrics.precision_recall_curve(label, pred)
+        score_pr = auc(recall, precision)
+
     if not treeLabel:
-        print("AUC score: " + str(score))
-        # print("auc2 : " + str(score))
+        print("AUC score_roc: " + str(score_roc))
+        print("AUC score_pr: " + str(score_pr))
+        # print("auc2 : " + str(score_roc))
         print("")
 
-    if math.isnan(score):
+    if math.isnan(score_roc):
         raise Exception("error! auc is NaN!")
-    # #------------------------------
-    # print("fpr :" + str(fpr))
-    # print("tpr :" + str(tpr))
-    # print(score)
-    # plt.figure(figsize=(8, 6))
-    # plt.plot(fpr, tpr)
-    # plt.title("ROC curve")
-    # plt.xlabel("False Positive Rate")
-    # plt.ylabel("True Positive Rate")
-    # plt.show()
 
-    return score
+    if roc:
+        return score_roc
+    else:
+        return score_pr
 
 #filename        : ファイル名(データ名) string
 #xtrains_percent : 訓練データの割合 float
@@ -174,7 +178,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
 
     #cross_count分のauc,acc合計
-    sum_auc = 0
+    sum_auc_roc = 0
+    sum_auc_pr = 0
     sum_accuracy = 0
 
     pca_fit_time = 0
@@ -250,7 +255,6 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                     X_train.extend(X_sepa_nor[i])
                     for j in range(len(X_sepa_nor[i])):
                         X_train_correct.append(1)
-
                 else:
                     # print(i, 222222)
                     X_test.extend(X_sepa_ano[i])
@@ -394,8 +398,9 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
 
         acc = calc_accuracy(X_test_correct, y_pred_test, treeLabel)
-        AUC = calc_AUC(X_test_correct, a_score, treeLabel)
-        sum_auc += AUC
+        AUC_roc, AUC_pr = calc_AUC(X_test_correct, a_score, treeLabel)
+        sum_auc_roc += AUC_roc
+        sum_auc_pr += AUC_pr
         sum_accuracy += acc
 
 
@@ -508,7 +513,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
 
 
-    auc2 = sum_auc / cross_count
+    auc2_roc = sum_auc_roc / cross_count
+    auc2_pr = sum_auc_pr / cross_count
     acc2 = sum_accuracy / cross_count
 
     #calc time
@@ -531,8 +537,11 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     if time_label:
         return all_time, pca_fit_time + pca_transform_train_time, fit_time, pca_transform_test_time, test_time, sum_train_time, sum_test_time
     elif treeLabel:
-        if math.isnan(auc2):
-            raise Exception("error! auc is NaN!.")
-        return auc2
+        if math.isnan(auc2_roc):
+            raise Exception("error! auc_roc is NaN!.")
+        if math.isnan(auc2_pr):
+            raise Exception("error! auc_pr is NaN!.")
+        return auc2_pr, auc2_roc
+
     else:
-        return auc2, acc2
+        return auc2_pr, auc2_roc, acc2
