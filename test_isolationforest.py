@@ -42,7 +42,7 @@ def calc_accuracy(X_rabel, X_pred, treeLabel): #精度計算(Accuracy)
 
 
 def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
-    roc = False
+    roc = True
     if roc:
         fpr, tpr, thresholds = roc_curve(label, pred)
         score_roc = auc(fpr, tpr)
@@ -57,6 +57,8 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
         # plt.xlabel("False Positive Rate")
         # plt.ylabel("True Positive Rate")
         # plt.show()
+        if math.isnan(score_roc):
+            raise Exception("error! auc is NaN!")
     else:
         (precision, recall, _) = metrics.precision_recall_curve(label, pred)
         score_pr = auc(recall, precision)
@@ -67,8 +69,7 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
         # print("auc2 : " + str(score_roc))
         print("")
 
-    if math.isnan(score_roc):
-        raise Exception("error! auc is NaN!")
+
 
     if roc:
         return score_roc
@@ -179,7 +180,6 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
     #cross_count分のauc,acc合計
     sum_auc_roc = 0
-    sum_auc_pr = 0
     sum_accuracy = 0
 
     pca_fit_time = 0
@@ -236,18 +236,17 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
             # 学習データの異常系含有率を変更
             for i in range(cross_count):
-                if anomaly_rate is not None:
-                    if clf.contamination != anomaly_rate:
-                        if clf.contamination > anomaly_rate: #異常系を減らす
-                            k = int(np.ceil(len(X_sepa_nor[i]) * (anomaly_rate / (1 - anomaly_rate))))
-                            X_sepa_ano[i] = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
-                        else : #正常系を減らす
-                            n_normal = np.ceil(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
-                            normal_rate = n_normal / len(X_sepa_nor[i])
-                            k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
-                            X_sepa_nor[i] = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
-
                 if i != count:
+                    if anomaly_rate is not None:
+                        if clf.contamination != anomaly_rate:
+                            if clf.contamination > anomaly_rate:  # 異常系を減らす
+                                k = int(np.ceil(len(X_sepa_nor[i]) * (anomaly_rate / (1 - anomaly_rate))))
+                                X_sepa_ano[i] = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
+                            else:  # 正常系を減らす
+                                n_normal = np.ceil(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
+                                normal_rate = n_normal / len(X_sepa_nor[i])
+                                k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
+                                X_sepa_nor[i] = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
                     X_train.extend(X_sepa_ano[i])
                     for j in range(len(X_sepa_ano[i])):
                         X_train_correct.append(-1)
@@ -398,9 +397,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
 
         acc = calc_accuracy(X_test_correct, y_pred_test, treeLabel)
-        AUC_roc, AUC_pr = calc_AUC(X_test_correct, a_score, treeLabel)
+        AUC_roc = calc_AUC(X_test_correct, a_score, treeLabel)
         sum_auc_roc += AUC_roc
-        sum_auc_pr += AUC_pr
         sum_accuracy += acc
 
 
@@ -514,7 +512,6 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
 
     auc2_roc = sum_auc_roc / cross_count
-    auc2_pr = sum_auc_pr / cross_count
     acc2 = sum_accuracy / cross_count
 
     #calc time
@@ -538,10 +535,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
         return all_time, pca_fit_time + pca_transform_train_time, fit_time, pca_transform_test_time, test_time, sum_train_time, sum_test_time
     elif treeLabel:
         if math.isnan(auc2_roc):
-            raise Exception("error! auc_roc is NaN!.")
-        if math.isnan(auc2_pr):
-            raise Exception("error! auc_pr is NaN!.")
-        return auc2_pr, auc2_roc
+            raise Exception("error! auc is NaN!.")
+        return auc2_roc
 
     else:
-        return auc2_pr, auc2_roc, acc2
+        return auc2_roc, acc2

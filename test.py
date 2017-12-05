@@ -160,7 +160,7 @@ for i in range(7):
         # plt.subplot(2, 5, i*2+2)
 
         plt.subplot(2, m, (i-1)+5)
-        plt.plot(x, list2[i], label=list2_name[i], marker="D", color = c[i-1])
+        plt.plot(x, list2[i], label=list_name[i], marker="D", color = c[i-1])
         plt.grid(True)
         plt.xlabel('training rate')
         plt.ylabel('times')
