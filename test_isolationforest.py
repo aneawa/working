@@ -67,9 +67,30 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
         print("AUC score_roc: " + str(score_roc))
         print("AUC score_pr: " + str(score_pr))
         # print("auc2 : " + str(score_roc))
-        print("")
 
+def calc_FN(label, pred):
+    n_data = len(label)
+    FP = 0
+    TP = 0
+    TN = 0
+    FN = 0
+    for i in range(len(label)):
+        if label[i] == 1:
+            if pred[i] == 1:
+                TP += 1
+            else:
+                FN += 1
+        else:
+            if pred[i] == 1:
+                FP += 1
+            else:
+                TN += 1
+    FPR = FP / n_data
+    TPR = TP / n_data
+    TNR = TN / n_data
+    FNR = FN / n_data
 
+    return FPR, TPR, TNR, FNR
 
     if roc:
         return score_roc
@@ -92,7 +113,7 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
 
 def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn_estimator = 100, sepaLabel = True,
          treeLabel = False, seed = 42, pcaLabel = False, n_comp = 2, sepa2 = False, time_label = False, stream = False,
-         sfl = False, anomaly_rate = None):
+         sfl = False, anomaly_rate = None, max_samples = None):
 
     inf = float("inf")
     all_start = time.time()
@@ -133,6 +154,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     clf.n_estimators = nn_estimator
     clf.verbose = 0
     clf.max_features = max_feat
+    if max_samples != None:
+        clf.max_samples = max_samples
 
     if (str(filename) == '/home/anegawa/Dropbox/shuttle.mat'):
         clf.contamination = 0.07
@@ -181,6 +204,11 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     #cross_count分のauc,acc合計
     sum_auc_roc = 0
     sum_accuracy = 0
+    FPR_sum = 0
+    TPR_sum = 0
+    TNR_sum = 0
+    FNR_sum = 0
+
 
     pca_fit_time = 0
     pca_transform_train_time = 0
@@ -237,23 +265,41 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             # 学習データの異常系含有率を変更
             for i in range(cross_count):
                 if i != count:
+                    train_flag = True
                     if anomaly_rate is not None:
                         if clf.contamination != anomaly_rate:
+                            train_flag = False
                             if clf.contamination > anomaly_rate:  # 異常系を減らす
                                 k = int(np.ceil(len(X_sepa_nor[i]) * (anomaly_rate / (1 - anomaly_rate))))
-                                X_sepa_ano[i] = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
+                                anomaly_hoge = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
+                                normal_hoge = X_sepa_nor[i]
+                                # X_sepa_ano[i] = anomaly_hoge
+                                # X_sepa_ano[i] = []
+                                # X_sepa_ano[i].extend(anomaly_hoge)
                             else:  # 正常系を減らす
                                 n_normal = np.ceil(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
                                 normal_rate = n_normal / len(X_sepa_nor[i])
                                 k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
-                                X_sepa_nor[i] = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
-                    X_train.extend(X_sepa_ano[i])
-                    for j in range(len(X_sepa_ano[i])):
-                        X_train_correct.append(-1)
+                                normal_hoge = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
+                                anomaly_hoge = X_sepa_ano[i]
+                                # X_sepa_nor[i] = normal_hoge
+                            X_train.extend(anomaly_hoge)
+                            for j in range(len(anomaly_hoge)):
+                                X_train_correct.append(-1)
 
-                    X_train.extend(X_sepa_nor[i])
-                    for j in range(len(X_sepa_nor[i])):
-                        X_train_correct.append(1)
+                            X_train.extend(normal_hoge)
+                            for j in range(len(normal_hoge)):
+                                X_train_correct.append(1)
+
+                    if train_flag:
+                        X_train.extend(X_sepa_ano[i])
+                        for j in range(len(X_sepa_ano[i])):
+                            X_train_correct.append(-1)
+
+                        X_train.extend(X_sepa_nor[i])
+                        for j in range(len(X_sepa_nor[i])):
+                            X_train_correct.append(1)
+
                 else:
                     # print(i, 222222)
                     X_test.extend(X_sepa_ano[i])
@@ -398,6 +444,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
         acc = calc_accuracy(X_test_correct, y_pred_test, treeLabel)
         AUC_roc = calc_AUC(X_test_correct, a_score, treeLabel)
+        FPR, TPR, TNR, FNR = calc_FN(X_test_correct, y_pred_test)
+        FNR_sum += FNR
         sum_auc_roc += AUC_roc
         sum_accuracy += acc
 
@@ -513,6 +561,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
     auc2_roc = sum_auc_roc / cross_count
     acc2 = sum_accuracy / cross_count
+    fnr = FNR_sum / cross_count
 
     #calc time
     all_finish = time.time()
@@ -536,7 +585,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     elif treeLabel:
         if math.isnan(auc2_roc):
             raise Exception("error! auc is NaN!.")
-        return auc2_roc
+        # return auc2_roc
+        return fnr
 
     else:
         return auc2_roc, acc2

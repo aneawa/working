@@ -22,30 +22,26 @@ mammography = []
 pima = []
 ionosphere = []
 
-list = [annthyroid, satellite, arrhythmia, mammography, pima, ionosphere]
-list2 = ["annthyroid", "satellite", "arrhythmia", "mammography", "pima", "ionosphere"]
+list = [satellite, arrhythmia, mammography, pima, ionosphere]
+list2 = ["satellite", "arrhythmia", "mammography", "pima", "ionosphere"]
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_contamination_pr.txt', 'r')
-for row in f:
-    annthyroid.append(row[:-1])
-f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_contamination_pr.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_cont.txt', 'r')
 for row in f:
     arrhythmia.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_contamination_pr.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_cont.txt', 'r')
 for row in f:
     pima.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/mammo_contamination_pr.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/mammo_cont.txt', 'r')
 for row in f:
     mammography.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_contamination_pr.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_cont.txt', 'r')
 for row in f:
     satellite.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_contamination_pr.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_cont.txt', 'r')
 for row in f:
     ionosphere.append(row[:-1])
 f.close()
@@ -53,12 +49,13 @@ f.close()
 # #ついでにプロットしましょうか
 #
 # plt.figure(figsize=(8, 10))
-plt.title("pr-auc score(change contamination)")
+plt.title("auc score(change contamination)")
 for i in range(len(list)):
     plt.plot(list[i], label=list2[i])
 plt.xlabel('contamination')
-plt.ylabel('pr-auc')
+plt.ylabel('auc')
 plt.legend()
+plt.grid(True)
 plt.show()
 
 # plt.subplots_adjust(wspace=0.5, hspace=0.4)
