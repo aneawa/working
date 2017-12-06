@@ -59,6 +59,7 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
         # plt.show()
         if math.isnan(score_roc):
             raise Exception("error! auc is NaN!")
+
     else:
         (precision, recall, _) = metrics.precision_recall_curve(label, pred)
         score_pr = auc(recall, precision)
@@ -67,6 +68,11 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
         print("AUC score_roc: " + str(score_roc))
         print("AUC score_pr: " + str(score_pr))
         # print("auc2 : " + str(score_roc))
+
+    if roc:
+        return score_roc
+    else:
+        return score_pr
 
 def calc_FN(label, pred):
     n_data = len(label)
@@ -585,8 +591,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     elif treeLabel:
         if math.isnan(auc2_roc):
             raise Exception("error! auc is NaN!.")
-        # return auc2_roc
-        return fnr
+        return auc2_roc
+        # return fnr
 
     else:
         return auc2_roc, acc2
