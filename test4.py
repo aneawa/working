@@ -15,8 +15,8 @@ from sklearn import metrics
 import scipy.io
 import h5py
 
-tit = "mammaography"
-filename = '/home/anegawa/Dropbox/mammography.mat'
+tit = "satellite_kurto"
+filename = '/home/anegawa/Dropbox/satellite.mat'
 
 mat = scipy.io.loadmat(filename)
 X = mat['X']
@@ -46,11 +46,14 @@ for i in range(len(X[0])):
     kurtosis_set.append(kurtosis)
     skewness_set.append(skewness)
 
-kurtosis_rank = np.argsort(kurtosis_set)
-skewness_rank = np.argsort(skewness_set)
+
+var_rank = np.argsort(var)[::-1]
+kurtosis_rank = np.argsort(kurtosis_set)[::-1]
+skewness_rank = np.argsort(skewness_set)[::-1]
+
+
 flag_a = True
 flag_n = True
-
 for i in range(len(X)):
     if y[i] == 1: #異常
         if flag_a:
@@ -63,8 +66,9 @@ for i in range(len(X)):
             plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="b", label = "normal")
             flag_n = False
         else:
-            plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="b")
-
+            plt.plot(X[i][var_rank[0]], X[i][var_rank[1]], '.', color="b")
+    # print(X[i][var_rank[0]], X[i][var_rank[1]])
+# plt.xlim(-0.005, 0.005)
 # for i in range(len(X)):
 #     plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color = "r")
 #     print(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]])

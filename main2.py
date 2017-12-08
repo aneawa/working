@@ -14,18 +14,18 @@ import numpy as np
 hoge = 10
 hoge2 = 36
 auc = 0
-filename = '/home/anegawa/Dropbox/satellite.mat'
+filename = '/home/anegawa/Dropbox/arrhythmia.mat'
 #all_result = [all, pca_train(fit+trans), fit, pca_test(trans), test, sum_train, sum_test]
 
 # for i in range(10, 110, 10):
-for i in range(1,2):
+for i in range(1,101):
     # all_result = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0])
     # all_result = np.array([0.0 ,0.0])
     all_result = 0
     for j in range(hoge):
         result = main(filename, xtrains_percent = 0.2 , maxfeature = 3, fit_ylabel = False, nn_estimator = 100,
                     sepaLabel = True, treeLabel=True, seed = datetime.datetime.today().microsecond, pcaLabel = False,
-                    n_comp = 31, sepa2 = False, time_label=False, stream=False, anomaly_rate = None, max_samples=None)
+                    n_comp = 31, sepa2 = False, time_label=False, stream=False, anomaly_rate = None, max_samples=i/100)
         all_result += result
     all_result = np.array(all_result)
     print(all_result/hoge)

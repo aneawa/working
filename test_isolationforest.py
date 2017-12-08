@@ -81,13 +81,13 @@ def calc_FN(label, pred):
     TN = 0
     FN = 0
     for i in range(len(label)):
-        if label[i] == 1:
-            if pred[i] == 1:
+        if label[i] == -1:
+            if pred[i] == -1:
                 TP += 1
             else:
                 FN += 1
         else:
-            if pred[i] == 1:
+            if pred[i] == -1:
                 FP += 1
             else:
                 TN += 1
@@ -98,10 +98,7 @@ def calc_FN(label, pred):
 
     return FPR, TPR, TNR, FNR
 
-    if roc:
-        return score_roc
-    else:
-        return score_pr
+
 
 #filename        : ファイル名(データ名) string
 #xtrains_percent : 訓練データの割合 float
@@ -283,7 +280,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                                 # X_sepa_ano[i] = []
                                 # X_sepa_ano[i].extend(anomaly_hoge)
                             else:  # 正常系を減らす
-                                n_normal = np.ceil(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
+                                n_normal = int(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
                                 normal_rate = n_normal / len(X_sepa_nor[i])
                                 k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
                                 normal_hoge = random.sample(X_sepa_nor[i], k)  # ランダムに抽出

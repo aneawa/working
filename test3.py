@@ -33,47 +33,48 @@ list2 = ["satellite", "arrhythmia", "ionosphere"]
 list_color = ["r", "b", "g"]
 
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_subsamp_log.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_subsamp_auc_rate.txt', 'r')
 for row in f:
     arrhythmia_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_subsamp_log.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_subsamp_auc_rate.txt', 'r')
 for row in f:
     ionosphere_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_subsamp_log.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_subsamp_auc_rate.txt', 'r')
 for row in f:
     satellite_pr.append(row[:-1])
 f.close()
 
 
-ionosphere_plain = 0.175947686117
-arrhythmia_plain = 0.0767826086957
-satellite_plain = 0.166598293968
+ionosphere_fnr = 0.11108249497
+arrhythmia_fnr = 0.0739806763285
+satellite_fnr = 0.122858629057
 
-ionosphere_cri = 0.84241982906
-satellite_cri = 0.682251407222
-arrhythmia_cri = 0.812402597403
+ionosphere_auc = 0.845118632479
+satellite_auc = 0.695031396538
+arrhythmia_auc = 0.812499167499
 
 xx = []
 for i in range(1,16):
     xx.append(2**i)
-cri = [satellite_cri, arrhythmia_cri, ionosphere_cri]
-plains = [satellite_plain, arrhythmia_plain, ionosphere_plain]
+fnr = [satellite_fnr, arrhythmia_fnr, ionosphere_fnr]
+auc = [satellite_auc, arrhythmia_auc, ionosphere_auc]
 plt.figure(figsize=(10, 6))
 plt.subplots_adjust(wspace=0.3, hspace=0.2)
 ax = plt.gca()
-ax.set_xscale('log')
+# ax.set_xscale('log')
 
 # plt.suptitle("competition between pr-auc and roc-auc")
 
-# plt.hlines(y=plains, xmin=0, xmax=40000, colors=['r','b','g'], linestyles='dashed', linewidths=1)
-plt.hlines(y=cri, xmin=0, xmax=40000, colors=['r','b','g'], linestyles='dashed', linewidths=1)
+plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g'], linestyles='dashed', linewidths=1)
+# plt.hlines(y=plains, xmin=0, xmax=100, colors=['r','b','g'], linestyles='dashed', linewidths=1)
 
-plt.title("AUC by subsampling size")
+plt.title("AUC by subsampling rate")
 for i in range(len(list)):
-    plt.plot(xx, list[i], label=list2[i], color=list_color[i])
-plt.xlabel('subsumpling size')
+    plt.plot(range(1,101), list[i], label=list2[i], color=list_color[i])
+    # plt.plot(list[i], label=list2[i], color=list_color[i])
+plt.xlabel('subsumpling rate')
 plt.ylabel('AUC score')
 # plt.ylim(0, 0.2)
 plt.legend()
