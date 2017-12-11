@@ -16,7 +16,7 @@ import scipy.io
 import h5py
 
 tit = "satellite_kurto"
-filename = '/home/anegawa/Dropbox/satellite.mat'
+filename = '/home/anegawa/Dropbox/cover.mat'
 
 mat = scipy.io.loadmat(filename)
 X = mat['X']

@@ -449,6 +449,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
         AUC_roc = calc_AUC(X_test_correct, a_score, treeLabel)
         FPR, TPR, TNR, FNR = calc_FN(X_test_correct, y_pred_test)
         FNR_sum += FNR
+        FPR_sum += FPR
         sum_auc_roc += AUC_roc
         sum_accuracy += acc
 
@@ -565,6 +566,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     auc2_roc = sum_auc_roc / cross_count
     acc2 = sum_accuracy / cross_count
     fnr = FNR_sum / cross_count
+    fpr = FPR_sum / cross_count
 
     #calc time
     all_finish = time.time()
@@ -590,6 +592,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             raise Exception("error! auc is NaN!.")
         return auc2_roc
         # return fnr
+        # return fpr
 
     else:
         return auc2_roc, acc2

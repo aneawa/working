@@ -18,48 +18,63 @@ import time
 
 
 satellite_pr = []
-satellite_roc = []
 arrhythmia_pr = []
-arrhythmia_roc = []
 ionosphere_pr = []
-ionosphere_roc = []
+annthyroid_pr = []
+pima_pr = []
+
+list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr]
+list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima"]
+list_color = ["r", "b", "g", "c", "m"]
 
 
-# list = [satellite_pr, satellite_roc, arrhythmia_pr, arrhythmia_roc, ionosphere_pr, ionosphere_roc]
-# list2 = ["satellite_pr", "satellite_roc", "arrhythmia_pr", "arrhythmia_roc", "ionosphere_pr", "ionosphere_roc"]
-# list_color = ["r", "r", "b", "b", "g", "g"]
-list = [satellite_pr, arrhythmia_pr, ionosphere_pr]
-list2 = ["satellite", "arrhythmia", "ionosphere"]
-list_color = ["r", "b", "g"]
-
-
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_subsamp_auc_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_subsamp_auc.txt', 'r')
 for row in f:
     arrhythmia_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_subsamp_auc_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_subsamp_auc.txt', 'r')
 for row in f:
     ionosphere_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_subsamp_auc_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_subsamp_auc.txt', 'r')
 for row in f:
     satellite_pr.append(row[:-1])
 f.close()
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_subsamp_auc.txt', 'r')
+for row in f:
+    annthyroid_pr.append(row[:-1])
+f.close()
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_subsamp_auc.txt', 'r')
+for row in f:
+    pima_pr.append(row[:-1])
+f.close()
+
 
 
 ionosphere_fnr = 0.11108249497
 arrhythmia_fnr = 0.0739806763285
 satellite_fnr = 0.122858629057
+annthyroid_fnr = 0.0511107833061
+pima_fnr = 0.158358373652
+
+ionosphere_fpr = 0.176804828974
+arrhythmia_fpr = 0.0785797101449
+satellite_fpr = 0.167248992902
+annthyroid_fpr = 0.0505682680612
+pima_fpr = 0.187412783295
 
 ionosphere_auc = 0.845118632479
 satellite_auc = 0.695031396538
 arrhythmia_auc = 0.812499167499
+annthyroid_auc = 0.797643479192
+pima_auc = 0.676132354997
 
 xx = []
 for i in range(1,16):
     xx.append(2**i)
-fnr = [satellite_fnr, arrhythmia_fnr, ionosphere_fnr]
-auc = [satellite_auc, arrhythmia_auc, ionosphere_auc]
+fnr = [satellite_fnr, arrhythmia_fnr, ionosphere_fnr, annthyroid_fnr, pima_fnr]
+fpr = [satellite_fpr, arrhythmia_fpr, ionosphere_fpr, annthyroid_fpr, pima_fpr]
+auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc]
 plt.figure(figsize=(10, 6))
 plt.subplots_adjust(wspace=0.3, hspace=0.2)
 ax = plt.gca()
@@ -67,8 +82,7 @@ ax = plt.gca()
 
 # plt.suptitle("competition between pr-auc and roc-auc")
 
-plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g'], linestyles='dashed', linewidths=1)
-# plt.hlines(y=plains, xmin=0, xmax=100, colors=['r','b','g'], linestyles='dashed', linewidths=1)
+plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m'], linestyles='dashed', linewidths=1)
 
 plt.title("AUC by subsampling rate")
 for i in range(len(list)):
