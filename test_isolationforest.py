@@ -230,6 +230,27 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             else:
                 X_normal.append(X[i])
 
+        #データ全体のcontaminationを操作
+        zentai = True
+        if zentai:
+            if anomaly_rate != clf.contamination:
+                if anomaly_rate < clf.contamination:
+                    #異常系をカットしますよ〜〜
+                    k = int(np.ceil(len(X_normal) * (anomaly_rate / (1 - anomaly_rate))))
+                    anomaly_hoge = random.sample(X_anomaly, k)  # ランダムに抽出
+                    normal_hoge = X_normal
+                else:
+                    #正常系をカットしましょうね〜〜
+                    n_normal = int(len(X_anomaly) / anomaly_rate) - len(X_anomaly)
+                    normal_rate = n_normal / len(X_normal)
+                    k = int(np.ceil(len(X_normal) * normal_rate))
+                    normal_hoge = random.sample(X_normal, k)  # ランダムに抽出
+                    anomaly_hoge = X_anomaly
+                X_anomaly = anomaly_hoge
+                X_normal = normal_hoge
+            anomaly_rate = None
+
+
         cutter_anomaly = len(X_anomaly) * rate
         cutter_normal = len(X_normal) * rate
         X_sepa_ano = []
@@ -590,9 +611,9 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     elif treeLabel:
         if math.isnan(auc2_roc):
             raise Exception("error! auc is NaN!.")
-        return auc2_roc
+        # return auc2_roc
         # return fnr
-        # return fpr
+        return fpr
 
     else:
         return auc2_roc, acc2
