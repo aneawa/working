@@ -326,13 +326,48 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                             X_train_correct.append(1)
 
                 else:
-                    # print(i, 222222)
-                    X_test.extend(X_sepa_ano[i])
-                    for j in range(len(X_sepa_ano[i])):
-                        X_test_correct.append(-1)
-                    X_test.extend(X_sepa_nor[i])
-                    for j in range(len(X_sepa_nor[i])):
-                        X_test_correct.append(1)
+                    # X_test.extend(X_sepa_ano[i])
+                    # for j in range(len(X_sepa_ano[i])):
+                    #     X_test_correct.append(-1)
+                    # X_test.extend(X_sepa_nor[i])
+                    # for j in range(len(X_sepa_nor[i])):
+                    #     X_test_correct.append(1)
+
+                    anomaly_rate2 = None
+                    test_flag = True
+                    if anomaly_rate2 is not None:
+                        if clf.contamination != anomaly_rate2:
+                            test_flag = False
+                            if clf.contamination > anomaly_rate2:  # 異常系を減らす
+                                k = int(np.ceil(len(X_sepa_nor[i]) * (anomaly_rate / (1 - anomaly_rate))))
+                                anomaly_hoge = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
+                                normal_hoge = X_sepa_nor[i]
+                                # X_sepa_ano[i] = anomaly_hoge
+                                # X_sepa_ano[i] = []
+                                # X_sepa_ano[i].extend(anomaly_hoge)
+                            else:  # 正常系を減らす
+                                n_normal = int(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
+                                normal_rate = n_normal / len(X_sepa_nor[i])
+                                k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
+                                normal_hoge = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
+                                anomaly_hoge = X_sepa_ano[i]
+                                # X_sepa_nor[i] = normal_hoge
+                            X_test.extend(anomaly_hoge)
+                            for j in range(len(anomaly_hoge)):
+                                X_test_correct.append(-1)
+
+                            X_test.extend(normal_hoge)
+                            for j in range(len(normal_hoge)):
+                                X_test_correct.append(1)
+
+                    if test_flag:
+                        X_test.extend(X_sepa_ano[i])
+                        for j in range(len(X_sepa_ano[i])):
+                            X_test_correct.append(-1)
+
+                        X_test.extend(X_sepa_nor[i])
+                        for j in range(len(X_sepa_nor[i])):
+                            X_test_correct.append(1)
 
 
 
