@@ -28,23 +28,23 @@ list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima"]
 list_color = ["r", "b", "g", "c", "m"]
 
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_traincont_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_subsamp_fpr_100.txt', 'r')
 for row in f:
     arrhythmia_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_traincont_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_subsamp_fpr_100.txt', 'r')
 for row in f:
     ionosphere_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_traincont_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_subsamp_fpr_100.txt', 'r')
 for row in f:
     satellite_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_traincont_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_subsamp_fpr_100.txt', 'r')
 for row in f:
     annthyroid_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_traincont_rate.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_subsamp_fpr_100.txt', 'r')
 for row in f:
     pima_pr.append(row[:-1])
 f.close()
@@ -82,10 +82,10 @@ ax = plt.gca()
 
 # plt.suptitle("competition between pr-auc and roc-auc")
 
-plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m'], linestyles='dashed', linewidths=1)
+plt.hlines(y=fpr, xmin=0, xmax=100, colors=['r','b','g','c','m'], linestyles='dashed', linewidths=1)
 # plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m'], linewidths=1)
 
-plt.title("AUC by contamination of train")
+plt.title("FPR by subsampling size")
 for i in range(len(list)):
     hoge = []
     hoge2 = []
@@ -98,9 +98,9 @@ for i in range(len(list)):
             # plt.plot(list[i][j], label=list2[i], color=list_color[i])
             # plt.plot(j,list[i][j],'.' ,color=list_color[i])
     plt.plot(hoge,hoge2, label=list2[i], color=list_color[i])
-plt.xlabel('contamination')
-plt.ylabel('AUC score')
-# plt.ylim(0, 0.2)
+plt.xlabel('subsampling size')
+plt.ylabel('FPR score')
+plt.ylim(0, 0.225)
 plt.legend()
 plt.grid(True)
 plt.show()

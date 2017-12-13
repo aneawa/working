@@ -333,6 +333,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                     # for j in range(len(X_sepa_nor[i])):
                     #     X_test_correct.append(1)
 
+                    #テストデータの含有率も変えます？？
                     anomaly_rate2 = None
                     test_flag = True
                     if anomaly_rate2 is not None:
