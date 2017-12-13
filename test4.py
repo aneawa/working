@@ -15,8 +15,8 @@ from sklearn import metrics
 import scipy.io
 import h5py
 
-tit = "satellite_kurto"
-filename = '/home/anegawa/Dropbox/cover.mat'
+tit = "kurtosis and variance of annthyroid"
+filename = '/home/anegawa/Dropbox/annthyroid.mat'
 
 mat = scipy.io.loadmat(filename)
 X = mat['X']
@@ -52,27 +52,42 @@ kurtosis_rank = np.argsort(kurtosis_set)[::-1]
 skewness_rank = np.argsort(skewness_set)[::-1]
 
 
-flag_a = True
-flag_n = True
-for i in range(len(X)):
-    if y[i] == 1: #異常
-        if flag_a:
-            plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="r", label="anomaly")
-            flag_a = False
-        else:
-            plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="r")
-    else: #正常
-        if flag_n:
-            plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="b", label = "normal")
-            flag_n = False
-        else:
-            plt.plot(X[i][var_rank[0]], X[i][var_rank[1]], '.', color="b")
-    # print(X[i][var_rank[0]], X[i][var_rank[1]])
-# plt.xlim(-0.005, 0.005)
+# flag_a = True
+# flag_n = True
 # for i in range(len(X)):
-#     plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color = "r")
-#     print(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]])
-plt.title(tit)
+#     if y[i] == 1: #異常
+#         if flag_a:
+#             plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="r", label="anomaly")
+#             flag_a = False
+#         else:
+#             plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="r")
+#     else: #正常
+#         if flag_n:
+#             plt.plot(X[i][kurtosis_rank[0]], X[i][kurtosis_rank[1]], '.', color="b", label = "normal")
+#             flag_n = False
+#         else:
+#             plt.plot(X[i][var_rank[0]], X[i][var_rank[1]], '.', color="b")
+
+
+
+
+plt.subplots_adjust(wspace=0.5, hspace=0.4)
+plt.subplot(2, 1, 1)
+plt.suptitle(tit)
+plt.bar(range(len(var)), np.sort(var)[::-1], align = 'center', color = "r")
+# plt.plot(moto,yy, ".")
+plt.grid(True)
+plt.ylabel('variance')
+plt.xlabel('dim')
+
+plt.subplot(2, 1, 2)
+for i in range(len(kurtosis_set)):
+    plt.bar(i, kurtosis_set[i], align = 'center', color = "g")
+# plt.plot(moto,yy, ".")
+plt.grid(True)
+plt.ylabel('kurtosis')
+plt.xlabel('dim')
+
 plt.grid(True)
 plt.legend()
 plt.show()

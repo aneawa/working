@@ -14,11 +14,11 @@ import numpy as np
 hoge = 10
 hoge2 = 36
 auc = 0
-filename = '/home/anegawa/Dropbox/pima.mat'
+filename = '/home/anegawa/Dropbox/satellite.mat'
 #all_result = [all, pca_train(fit+trans), fit, pca_test(trans), test, sum_train, sum_test]
 
 # for i in range(10, 110, 10):
-for i in range(1,101):
+for i in range(0,1):
     # all_result = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0])
     # all_result = np.array([0.0 ,0.0])
     all_result = 0

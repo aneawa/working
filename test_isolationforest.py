@@ -57,8 +57,9 @@ def calc_AUC(label, pred, treeLabel): #精度計算(AUC)
         # plt.xlabel("False Positive Rate")
         # plt.ylabel("True Positive Rate")
         # plt.show()
-        if math.isnan(score_roc):
-            raise Exception("error! auc is NaN!")
+
+        # if math.isnan(score_roc):
+        #     raise Exception("error! auc is NaN!")
 
     else:
         (precision, recall, _) = metrics.precision_recall_curve(label, pred)
@@ -231,7 +232,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                 X_normal.append(X[i])
 
         #データ全体のcontaminationを操作
-        zentai = True
+        zentai = False
         if zentai:
             if anomaly_rate != clf.contamination:
                 if anomaly_rate < clf.contamination:
@@ -609,11 +610,11 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
     if time_label:
         return all_time, pca_fit_time + pca_transform_train_time, fit_time, pca_transform_test_time, test_time, sum_train_time, sum_test_time
     elif treeLabel:
-        if math.isnan(auc2_roc):
-            raise Exception("error! auc is NaN!.")
-        # return auc2_roc
+        # if math.isnan(auc2_roc):
+        #     raise Exception("error! auc is NaN!.")
+        return auc2_roc
         # return fnr
-        return fpr
+        # return fpr
 
     else:
         return auc2_roc, acc2
