@@ -22,33 +22,46 @@ arrhythmia_pr = []
 ionosphere_pr = []
 annthyroid_pr = []
 pima_pr = []
+http=[]
+cover=[]
 
-list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr]
-list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima"]
-list_color = ["r", "b", "g", "c", "m"]
+# list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr]
+# list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima"]
+# list_color = ["r", "b", "g", "c", "m"]
+list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr, http, cover]
+list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima", "http", "cover"]
+list_color = ["r", "b", "g", "c", "m", "k", "y"]
 
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_subsamp_fpr_100.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_traincont_auc_0to1%.txt', 'r')
 for row in f:
     arrhythmia_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_subsamp_fpr_100.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_traincont_auc_0to1%.txt', 'r')
 for row in f:
     ionosphere_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_subsamp_fpr_100.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_traincont_auc_0to1%.txt', 'r')
 for row in f:
     satellite_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_subsamp_fpr_100.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_traincont_auc_0to1%.txt', 'r')
 for row in f:
     annthyroid_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_subsamp_fpr_100.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_traincont_auc_0to1%.txt', 'r')
 for row in f:
     pima_pr.append(row[:-1])
 f.close()
 
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/http_traincont_auc_0to1%.txt', 'r')
+for row in f:
+    http.append(row[:-1])
+f.close()
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/cover_traincont_auc_0to1%.txt', 'r')
+for row in f:
+    cover.append(row[:-1])
+f.close()
 
 
 ionosphere_fnr = 0.11108249497
@@ -68,13 +81,17 @@ satellite_auc = 0.695031396538
 arrhythmia_auc = 0.812499167499
 annthyroid_auc = 0.797643479192
 pima_auc = 0.676132354997
+http_auc = 0.99988524389
+cover_auc  = 0.840470272243
 
 xx = []
 for i in range(1,16):
     xx.append(2**i)
 fnr = [satellite_fnr, arrhythmia_fnr, ionosphere_fnr, annthyroid_fnr, pima_fnr]
 fpr = [satellite_fpr, arrhythmia_fpr, ionosphere_fpr, annthyroid_fpr, pima_fpr]
-auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc]
+# auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc]
+auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc, http_auc, cover_auc]
+
 plt.figure(figsize=(10, 6))
 plt.subplots_adjust(wspace=0.3, hspace=0.2)
 ax = plt.gca()
@@ -82,10 +99,12 @@ ax = plt.gca()
 
 # plt.suptitle("competition between pr-auc and roc-auc")
 
-plt.hlines(y=fpr, xmin=0, xmax=100, colors=['r','b','g','c','m'], linestyles='dashed', linewidths=1)
+# plt.hlines(y=fpr, xmin=0, xmax=100, colors=['r','b','g','c','m'], linestyles='dashed', linewidths=1)
+plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m','k','y'], linestyles='dashed', linewidths=1)
+
 # plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m'], linewidths=1)
 
-plt.title("FPR by subsampling size")
+plt.title("AUC by contamination of train")
 for i in range(len(list)):
     hoge = []
     hoge2 = []
@@ -98,9 +117,9 @@ for i in range(len(list)):
             # plt.plot(list[i][j], label=list2[i], color=list_color[i])
             # plt.plot(j,list[i][j],'.' ,color=list_color[i])
     plt.plot(hoge,hoge2, label=list2[i], color=list_color[i])
-plt.xlabel('subsampling size')
-plt.ylabel('FPR score')
-plt.ylim(0, 0.225)
+plt.xlabel('contamination')
+plt.ylabel('AUC score')
+# plt.ylim(0, 0.225)
 plt.legend()
 plt.grid(True)
 plt.show()

@@ -235,6 +235,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
         zentai = False
         if zentai:
             if anomaly_rate != clf.contamination:
+                clf.contamination = anomaly_rate
                 if anomaly_rate < clf.contamination:
                     #異常系をカットしますよ〜〜
                     k = int(np.ceil(len(X_normal) * (anomaly_rate / (1 - anomaly_rate))))
@@ -337,6 +338,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                     anomaly_rate2 = None
                     test_flag = True
                     if anomaly_rate2 is not None:
+                        clf.contamination = anomaly_rate2
                         if clf.contamination != anomaly_rate2:
                             test_flag = False
                             if clf.contamination > anomaly_rate2:  # 異常系を減らす
