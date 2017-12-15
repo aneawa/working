@@ -100,7 +100,7 @@ ax = plt.gca()
 # plt.suptitle("competition between pr-auc and roc-auc")
 
 # plt.hlines(y=fpr, xmin=0, xmax=100, colors=['r','b','g','c','m'], linestyles='dashed', linewidths=1)
-plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m','k','y'], linestyles='dashed', linewidths=1)
+plt.hlines(y=auc, xmin=0, xmax=1, colors=['r','b','g','c','m','k','y'], linestyles='dashed', linewidths=1)
 
 # plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m'], linewidths=1)
 
@@ -110,7 +110,7 @@ for i in range(len(list)):
     hoge2 = []
     for j in range(len(list[i])):
         if list[i][j] != 'nan':
-            hoge.append(j)
+            hoge.append(j/100)
             hoge2.append(list[i][j])
 
             # plt.plot(range(1,101), list[i], label=list2[i], color=list_color[i])

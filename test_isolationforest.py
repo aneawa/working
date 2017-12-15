@@ -455,6 +455,36 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             pca_fit_time += (pca_fit_finish - pca_fit_start)
             pca_transform_train_time += (pca_transform_train_finish - pca_transform_train_start)
 
+        varLabel = False
+        kurtosisLabel = False
+        var = []
+        kurtosis_set = []
+        skewness_set = []
+        if varLabel or kurtosisLabel:
+            for i in range(len(X_train[0])):
+                data = []
+                for j in range(len(X_train)):
+                    data.append(X_train[j][i])
+                data = np.array(data)
+                ave = np.average(data)
+                std = np.std(data)
+                kurtosis = np.average((data - ave) ** 3) / (std ** 3)
+                skewness = np.average((data - ave) ** 4) / (std ** 4) - 3
+
+                var.append(std)
+                kurtosis_set.append(kurtosis)
+                skewness_set.append(skewness)
+            var_rank = np.argsort(var)[::-1]
+            kurtosis_rank = np.argsort(kurtosis_set)[::-1]
+            skewness_rank = np.argsort(skewness_set)[::-1]
+
+            hoge = []
+            for i in range(clf.max_features):
+                if varLabel:
+                    hoge.append(np.array(X_train)[:,var_rank[i]])
+                elif kurtosisLabel:
+                    hoge.append(np.array(X_train)[:,kurtosis_rank[i]])
+            X_train = hoge.T
 
         fit_start = time.time()
         #fit_ylabelはFalseで固定

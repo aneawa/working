@@ -50,6 +50,13 @@ for i in range(len(X[0])):
 var_rank = np.argsort(var)[::-1]
 kurtosis_rank = np.argsort(kurtosis_set)[::-1]
 skewness_rank = np.argsort(skewness_set)[::-1]
+print(var_rank)
+print(kurtosis_rank)
+A = np.array([[0,1,2,3,4,5],
+              [0,1,2,3,4,5],
+              [0,1,2,3,4,5]])
+print("")
+print(A[:,1])
 
 
 # flag_a = True
