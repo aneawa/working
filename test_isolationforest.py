@@ -457,8 +457,9 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
             pca_transform_train_time += (pca_transform_train_finish - pca_transform_train_start)
 
 
-        varLabel = False
-        kurtosisLabel = True
+        #尖度や分散の大きな軸を選択したい方はこちら
+        varLabel = True
+        kurtosisLabel = False
         if varLabel or kurtosisLabel:
             var = []
             kurtosis_set = []
@@ -470,15 +471,22 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
                 data = np.array(data)
                 ave = np.average(data)
                 std = np.std(data)
-                kurtosis = np.average((data - ave) ** 3) / (std ** 3)
-                skewness = np.average((data - ave) ** 4) / (std ** 4) - 3
+                # if math.isnan(((data - ave) ** 3 / (std ** 3))[0]):
+                #     if ave != 0 or std != 0:
+                #         print("ave : " + str(ave))
+                #         print("std : " + str(std))
+                if std == 0:
+                    kurtosis = -10000
+                else:
+                    kurtosis = np.average((data - ave) ** 3) / (std ** 3)
+                    skewness = np.average((data - ave) ** 4) / (std ** 4) - 3
 
                 var.append(std)
                 kurtosis_set.append(kurtosis)
                 skewness_set.append(skewness)
             var_rank = np.argsort(var)[::-1]
             kurtosis_rank = np.argsort(kurtosis_set)[::-1]
-            skewness_rank = np.argsort(skewness_set)[::-1] #歪度は使う予定今のとこないかな〜
+            skewness_rank = np.argsort(skewness_set)[::-1] #歪度を使う予定は今のとこないかな〜
 
             hoge = []
             for i in range(clf.max_features):
@@ -486,10 +494,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
                     hoge.append(np.array(X_train)[:,var_rank[i]])
                 elif kurtosisLabel:
                     hoge.append(np.array(X_train)[:,kurtosis_rank[i]])
-            print(X_train)
             X_train = np.array(hoge).T
-            print(X_train)
-            print("")
 
         fit_start = time.time()
         #fit_ylabelはFalseで固定

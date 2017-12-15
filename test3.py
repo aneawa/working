@@ -25,43 +25,43 @@ pima_pr = []
 http=[]
 cover=[]
 
-# list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr]
-# list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima"]
-# list_color = ["r", "b", "g", "c", "m"]
-list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr, http, cover]
-list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima", "http", "cover"]
-list_color = ["r", "b", "g", "c", "m", "k", "y"]
+list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr]
+list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima"]
+list_color = ["r", "b", "g", "c", "m"]
+# list = [satellite_pr, arrhythmia_pr, ionosphere_pr, annthyroid_pr, pima_pr, http, cover]
+# list2 = ["satellite", "arrhythmia", "ionosphere", "annthyroid", "pima", "http", "cover"]
+# list_color = ["r", "b", "g", "c", "m", "k", "y"]
 
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_traincont_auc_0to1%.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_varAtt_auc.txt', 'r')
 for row in f:
     arrhythmia_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_traincont_auc_0to1%.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_varAtt_auc.txt', 'r')
 for row in f:
     ionosphere_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_traincont_auc_0to1%.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_varAtt_auc.txt', 'r')
 for row in f:
     satellite_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_traincont_auc_0to1%.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_varAtt_auc.txt', 'r')
 for row in f:
     annthyroid_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_traincont_auc_0to1%.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_varAtt_auc.txt', 'r')
 for row in f:
     pima_pr.append(row[:-1])
 f.close()
-
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/http_traincont_auc_0to1%.txt', 'r')
-for row in f:
-    http.append(row[:-1])
-f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/cover_traincont_auc_0to1%.txt', 'r')
-for row in f:
-    cover.append(row[:-1])
-f.close()
+#
+# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/http_traincont_auc_0to1%.txt', 'r')
+# for row in f:
+#     http.append(row[:-1])
+# f.close()
+# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/cover_traincont_auc_0to1%.txt', 'r')
+# for row in f:
+#     cover.append(row[:-1])
+# f.close()
 
 
 ionosphere_fnr = 0.11108249497
@@ -89,8 +89,8 @@ for i in range(1,16):
     xx.append(2**i)
 fnr = [satellite_fnr, arrhythmia_fnr, ionosphere_fnr, annthyroid_fnr, pima_fnr]
 fpr = [satellite_fpr, arrhythmia_fpr, ionosphere_fpr, annthyroid_fpr, pima_fpr]
-# auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc]
-auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc, http_auc, cover_auc]
+auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc]
+# auc = [satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc, http_auc, cover_auc]
 
 plt.figure(figsize=(10, 6))
 plt.subplots_adjust(wspace=0.3, hspace=0.2)
