@@ -115,7 +115,7 @@ def calc_FN(label, pred):
 #stream          : リアルタイム処理 bool
 #sfl             : sepaLabel == Trueのときデータをシャッフルするか否か bool
 
-def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn_estimator = 100, sepaLabel = True,
+def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False, nn_estimator = 100, sepaLabel = True,
          treeLabel = False, seed = 42, pcaLabel = False, n_comp = 2, sepa2 = False, time_label = False, stream = False,
          sfl = False, anomaly_rate = None, max_samples = None):
 
@@ -142,10 +142,11 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
 
 
     rate = xtrains_percent
-    max_feat = int(maxfeature)
-    if max_feat == 3:
-        max_feat = X.shape[1]
 
+    if maxfeature == None:
+        max_feat = X.shape[1]
+    else:
+        max_feat = int(maxfeature)
 
     if not treeLabel:
         print('X_train\'s rate : ' + str(rate))
@@ -455,12 +456,13 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
             pca_fit_time += (pca_fit_finish - pca_fit_start)
             pca_transform_train_time += (pca_transform_train_finish - pca_transform_train_start)
 
+
         varLabel = False
-        kurtosisLabel = False
-        var = []
-        kurtosis_set = []
-        skewness_set = []
+        kurtosisLabel = True
         if varLabel or kurtosisLabel:
+            var = []
+            kurtosis_set = []
+            skewness_set = []
             for i in range(len(X_train[0])):
                 data = []
                 for j in range(len(X_train)):
@@ -476,7 +478,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                 skewness_set.append(skewness)
             var_rank = np.argsort(var)[::-1]
             kurtosis_rank = np.argsort(kurtosis_set)[::-1]
-            skewness_rank = np.argsort(skewness_set)[::-1]
+            skewness_rank = np.argsort(skewness_set)[::-1] #歪度は使う予定今のとこないかな〜
 
             hoge = []
             for i in range(clf.max_features):
@@ -484,7 +486,10 @@ def main(filename, xtrains_percent = 0.8, maxfeature = 3, fit_ylabel = False, nn
                     hoge.append(np.array(X_train)[:,var_rank[i]])
                 elif kurtosisLabel:
                     hoge.append(np.array(X_train)[:,kurtosis_rank[i]])
-            X_train = hoge.T
+            print(X_train)
+            X_train = np.array(hoge).T
+            print(X_train)
+            print("")
 
         fit_start = time.time()
         #fit_ylabelはFalseで固定

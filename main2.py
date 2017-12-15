@@ -23,7 +23,7 @@ for i in range(0,101):
     # all_result = np.array([0.0 ,0.0])
     all_result = 0
     for j in range(hoge):
-        result = main(filename, xtrains_percent = 0.2 , maxfeature = 3, fit_ylabel = False, nn_estimator = 100,
+        result = main(filename, xtrains_percent = 0.2 , maxfeature = 2, fit_ylabel = False, nn_estimator = 100,
                     sepaLabel = True, treeLabel=True, seed = datetime.datetime.today().microsecond, pcaLabel = False,
                     n_comp = 31, sepa2 = False, time_label=False, stream=False, anomaly_rate = i/10000, max_samples=None)
         all_result += result
