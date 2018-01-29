@@ -22,28 +22,28 @@ mammography = []
 pima = []
 ionosphere = []
 
-# list = [satellite, arrhythmia, mammography, pima, ionosphere]
-# list2 = ["satellite", "arrhythmia", "mammography", "pima", "ionosphere"]
-# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_cont.txt', 'r')
-# for row in f:
-#     arrhythmia.append(row[:-1])
-# f.close()
-# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_cont.txt', 'r')
-# for row in f:
-#     pima.append(row[:-1])
-# f.close()
-# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/mammo_cont.txt', 'r')
-# for row in f:
-#     mammography.append(row[:-1])
-# f.close()
-# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_cont.txt', 'r')
-# for row in f:
-#     satellite.append(row[:-1])
-# f.close()
-# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_cont.txt', 'r')
-# for row in f:
-#     ionosphere.append(row[:-1])
-# f.close()
+list = [satellite, arrhythmia, mammography, pima, ionosphere]
+list2 = ["satellite", "arrhythmia", "mammography", "pima", "ionosphere"]
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_cont.txt', 'r')
+for row in f:
+    arrhythmia.append(row[:-1])
+f.close()
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_cont.txt', 'r')
+for row in f:
+    pima.append(row[:-1])
+f.close()
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/mammo_cont.txt', 'r')
+for row in f:
+    mammography.append(row[:-1])
+f.close()
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_cont.txt', 'r')
+for row in f:
+    satellite.append(row[:-1])
+f.close()
+f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_cont.txt', 'r')
+for row in f:
+    ionosphere.append(row[:-1])
+f.close()
 
 var=[]
 kurto = []

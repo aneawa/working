@@ -100,26 +100,27 @@ ax = plt.gca()
 # plt.suptitle("competition between pr-auc and roc-auc")
 
 # plt.hlines(y=fpr, xmin=0, xmax=100, colors=['r','b','g','c','m'], linestyles='dashed', linewidths=1)
-plt.hlines(y=auc, xmin=0, xmax=1, colors=['r','b','g','c','m','k','y'], linestyles='dashed', linewidths=1)
+plt.hlines(y=auc, xmin=0, xmax=36, colors=['r','b','g','c','m','k','y'], linestyles='dashed', linewidths=1)
 
 # plt.hlines(y=auc, xmin=0, xmax=100, colors=['r','b','g','c','m'], linewidths=1)
 
-plt.title("AUC by contamination of train")
+plt.title("AUC using variance to select attributes.")
 for i in range(len(list)):
     hoge = []
     hoge2 = []
     for j in range(len(list[i])):
         if list[i][j] != 'nan':
-            hoge.append(j/100)
+            hoge.append(j+1)
             hoge2.append(list[i][j])
 
             # plt.plot(range(1,101), list[i], label=list2[i], color=list_color[i])
             # plt.plot(list[i][j], label=list2[i], color=list_color[i])
             # plt.plot(j,list[i][j],'.' ,color=list_color[i])
     plt.plot(hoge,hoge2, label=list2[i], color=list_color[i])
-plt.xlabel('contamination')
+plt.xlabel('number of attributes')
 plt.ylabel('AUC score')
 # plt.ylim(0, 0.225)
+# plt.xlim(0, 37)
 plt.legend()
 plt.grid(True)
 plt.show()

@@ -105,7 +105,7 @@ def calc_FN(label, pred):
 #xtrains_percent : 訓練データの割合 float
 #fit_ylabel      : fit時のyをlabelにするかNoneにするか(以前使っていましたが今はFalse固定) bool
 #nn_estimator    : ツリー数 int
-#sepaLabel       : データを学習用と評価用に分ける際，正常系と異常系それぞれからxtrains_percent分取るかどうか bool
+#sepaLabel       : データを学習用と評価用に分ける際，正常系と異常系それぞれからxtrains_percent分取るかどうか bool(デフォルトはtrue)
 #treeLabel       : 出力する仕様の変更(TrueだとAUCのみを出力, Falseなら他の情報も出力) bool
 #seed            : 乱数のシード値 int
 #pcaLabel        : pcaを行うか否か bool
@@ -114,8 +114,10 @@ def calc_FN(label, pred):
 #time_label      : aucでなく実行時間を出力(treeLabelより優先) bool
 #stream          : リアルタイム処理 bool
 #sfl             : sepaLabel == Trueのときデータをシャッフルするか否か bool
+#anomaly_rate    : 異常系含有率
+#max_samples     : サブサンプリング数
 
-def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False, nn_estimator = 100, sepaLabel = True,
+def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False, nn_estimator = 100, sepaLabel = True,
          treeLabel = False, seed = 42, pcaLabel = False, n_comp = 2, sepa2 = False, time_label = False, stream = False,
          sfl = False, anomaly_rate = None, max_samples = None):
 
@@ -144,7 +146,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
     rate = xtrains_percent
 
     if maxfeature == None:
-        max_feat = X.shape[1]
+        max_feat = len(X[0])
     else:
         max_feat = int(maxfeature)
 
@@ -234,24 +236,24 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
 
         #データ全体のcontaminationを操作
         zentai = False
+        anomaly_rate_all = None
         if zentai:
-            if anomaly_rate != clf.contamination:
-                clf.contamination = anomaly_rate
-                if anomaly_rate < clf.contamination:
+            if anomaly_rate_all != clf.contamination:
+                clf.contamination = anomaly_rate_all
+                if anomaly_rate_all < clf.contamination:
                     #異常系をカットしますよ〜〜
-                    k = int(np.ceil(len(X_normal) * (anomaly_rate / (1 - anomaly_rate))))
+                    k = int(np.ceil(len(X_normal) * (anomaly_rate_all / (1 - anomaly_rate_all))))
                     anomaly_hoge = random.sample(X_anomaly, k)  # ランダムに抽出
                     normal_hoge = X_normal
                 else:
                     #正常系をカットしましょうね〜〜
-                    n_normal = int(len(X_anomaly) / anomaly_rate) - len(X_anomaly)
+                    n_normal = int(len(X_anomaly) / anomaly_rate_all) - len(X_anomaly)
                     normal_rate = n_normal / len(X_normal)
                     k = int(np.ceil(len(X_normal) * normal_rate))
                     normal_hoge = random.sample(X_normal, k)  # ランダムに抽出
                     anomaly_hoge = X_anomaly
                 X_anomaly = anomaly_hoge
                 X_normal = normal_hoge
-            anomaly_rate = None
 
 
         cutter_anomaly = len(X_anomaly) * rate
@@ -262,10 +264,18 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
             head2 = int(cutter_normal * i)
             tail2 = int(cutter_normal * (i+1)) - 1
             X_sepa_nor.append(X_normal[head2:tail2+1])
+            # print(len(X_sepa_nor))
+            # print(len(X_sepa_nor[0]))
+            # print(len(X_sepa_nor[0][0]))
 
             head = int(cutter_anomaly * i)
             tail = int(cutter_anomaly * (i+1)) - 1
             X_sepa_ano.append(X_anomaly[head:tail+1])
+        # print(len(X_sepa_nor))
+        # print(len(X_sepa_nor[0]))
+        # print(len(X_sepa_ano))
+        # print(len(X_sepa_ano[0]))
+        # print("")
 
 
 
@@ -289,6 +299,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
             X_test = []
             X_test_correct = []
 
+
             # 学習データの異常系含有率を変更
             for i in range(cross_count):
                 if i != count:
@@ -296,27 +307,34 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
                     if anomaly_rate is not None:
                         if clf.contamination != anomaly_rate:
                             train_flag = False
-                            if clf.contamination > anomaly_rate:  # 異常系を減らす
-                                k = int(np.ceil(len(X_sepa_nor[i]) * (anomaly_rate / (1 - anomaly_rate))))
-                                anomaly_hoge = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
-                                normal_hoge = X_sepa_nor[i]
-                                # X_sepa_ano[i] = anomaly_hoge
-                                # X_sepa_ano[i] = []
-                                # X_sepa_ano[i].extend(anomaly_hoge)
-                            else:  # 正常系を減らす
-                                n_normal = int(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
-                                normal_rate = n_normal / len(X_sepa_nor[i])
-                                k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
-                                normal_hoge = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
-                                anomaly_hoge = X_sepa_ano[i]
-                                # X_sepa_nor[i] = normal_hoge
-                            X_train.extend(anomaly_hoge)
-                            for j in range(len(anomaly_hoge)):
-                                X_train_correct.append(-1)
+                            if clf.contamination != anomaly_rate:
+                                all = len(X_sepa_nor[i]) + len(X_sepa_ano[i])
+                                cont = len(X_sepa_ano[i]) / all
+                                # print(cont)
+                                # print(anomaly_rate)
+                                if cont > anomaly_rate:# 異常系を減らす
+                                    k = int(np.ceil(len(X_sepa_nor[i]) * (anomaly_rate / (1 - anomaly_rate))))
+                                    if len(X_sepa_ano[i]) < k:
+                                        k = len(X_sepa_ano[i])
+                                    anomaly_hoge = random.sample(X_sepa_ano[i], k)  # ランダムに抽出
+                                    normal_hoge = X_sepa_nor[i]
+                                else:  # 正常系を減らす
+                                    k = int(len(X_sepa_ano[i]) / anomaly_rate) - len(X_sepa_ano[i])
+                                    normal_hoge = random.sample(X_sepa_nor[i], k)  # ランダムに抽出
+                                    anomaly_hoge = X_sepa_ano[i]
+                                    # k = int(len(X_sepa_ano[i]) * (1-anomaly_rate)/anomaly_rate)
+                                    # normal_rate = n_normal / len(X_sepa_nor[i])
+                                    # k = int(np.ceil(len(X_sepa_nor[i]) * normal_rate))
+                                    # X_sepa_nor[i] = normal_hoge
+                                X_train.extend(anomaly_hoge)
+                                # print("aaaaa")
+                                # print(X_train)
+                                for j in range(len(anomaly_hoge)):
+                                    X_train_correct.append(-1)
 
-                            X_train.extend(normal_hoge)
-                            for j in range(len(normal_hoge)):
-                                X_train_correct.append(1)
+                                X_train.extend(normal_hoge)
+                                for j in range(len(normal_hoge)):
+                                    X_train_correct.append(1)
 
                     if train_flag:
                         X_train.extend(X_sepa_ano[i])
@@ -416,10 +434,11 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
             X_test_correct = []
             for i in range(cross_count):
                 if i != count:
+                    # print(X_train)
                     X_train.extend(X_sepa[i])
                     X_train_correct.extend(y_sepa[i])
                 else:#i == count
-                    print(i, 1111111)
+                    # print(i, 1111111)
                     X_test.extend(X_sepa[i])
                     X_test_correct.extend(y_sepa[i])
 
@@ -444,7 +463,8 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
         if pcaLabel:
             pca_fit_start = time.time()
             pca = PCA(copy=True, iterated_power='auto', n_components=n_comp, random_state=None,
-                        svd_solver='auto', tol=0.0, whiten=False)
+                      svd_solver='auto', tol=0.0, whiten=False)
+            # print("X_train: " + str(X_train))
             pca.fit(X_train)
             pca_fit_finish = time.time()
 
@@ -456,9 +476,9 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
             pca_fit_time += (pca_fit_finish - pca_fit_start)
             pca_transform_train_time += (pca_transform_train_finish - pca_transform_train_start)
 
-
+        #variance and kurtosis
         #尖度や分散の大きな軸を選択したい方はこちら
-        varLabel = True
+        varLabel = False
         kurtosisLabel = False
         if varLabel or kurtosisLabel:
             var = []
@@ -501,6 +521,7 @@ def main(filename, xtrains_percent = 0.8, maxfeature = None, fit_ylabel = False,
         if fit_ylabel:
             clf.fit(X_train, X_train_correct, sample_weight=None)
         else :
+            # print(X_train)
             clf.fit(X_train, y = None, sample_weight=None)
         fit_finish = time.time()
         fit_time += (fit_finish - fit_start)
