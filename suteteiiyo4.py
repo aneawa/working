@@ -32,7 +32,29 @@ annthyroid_auc = 0.797643479192
 pima_auc = 0.676132354997
 http_auc = 0.99988524389
 cover_auc  = 0.840470272243
+
+
+ionosphere_fnr = 0.11108249497
+arrhythmia_fnr = 0.0739806763285
+satellite_fnr = 0.122858629057
+annthyroid_fnr = 0.0511107833061
+pima_fnr = 0.158358373652
+# http_fnr = 5.60354394649e-05
+http_fnr = 5.60354394649*pow(10, -5)
+cover_fnr = 0.0087520252075
+
+ionosphere_fpr = 0.176804828974
+arrhythmia_fpr = 0.0785797101449
+satellite_fpr = 0.167248992902
+annthyroid_fpr = 0.0505682680612
+pima_fpr = 0.187412783295
+http_fpr = 0.00021621134353
+cover_fpr = 0.0117011497879
+
 list_auc=[http_auc, cover_auc, satellite_auc, arrhythmia_auc, ionosphere_auc, annthyroid_auc, pima_auc]
+list_fnr = [http_fnr, cover_fnr, satellite_fnr, arrhythmia_fnr, ionosphere_fnr, annthyroid_fnr, pima_fnr]
+list_fpr = [http_fpr, cover_fpr, satellite_fpr, arrhythmia_fpr, ionosphere_fpr, annthyroid_fpr, pima_fpr]
+
 list = [http, cover, satellite, arrhythmia, ionosphere, annthyroid, pima]
 list2 = ["http", "forestcover", "satellite", "arrhythmia", "ionosphere", "annthyroid", "pima"]
 
@@ -42,47 +64,37 @@ list2 = ["http", "forestcover", "satellite", "arrhythmia", "ionosphere", "annthy
 list_color = ["r", "b", "g", "c", "m", "k", "y"]
 
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/pca/tree/annth_ori_tree.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/arrhy1.txt', 'r')
 for row in f:
     arrhythmia.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/pca/tree/http_ori_tree.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/http1.txt', 'r')
 for row in f:
     http.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/pca/tree/cover_ori_tree.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/cover1.txt', 'r')
 for row in f:
     cover.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/pca/tree/sate_ori_tree.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/sate1.txt', 'r')
 for row in f:
     satellite.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/pca/tree/iono_ori_tree.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/iono1.txt', 'r')
 for row in f:
     ionosphere.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/pca/tree/annth_ori_tree.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/annth1.txt', 'r')
 for row in f:
     annthyroid.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/pca/tree/pima_ori_tree.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/pima1.txt', 'r')
 for row in f:
     pima.append(row[:-1])
 f.close()
 
-# hoge3 = []
-# hoge4 = []
-# for i in range(len(list)):
-#     hoge3.append(np.argmax(list[i]))
-#     hoge4.append(max(list[i]))
-# print("index : " + str(hoge3))
-# print("value : " + str(hoge4))
-# print(list2)
 
-
-
-plt.title("AUC by number of trees")
+plt.title("AUC by contamination")
 xsize = 100
 for i in range(len(list)):
     hoge = []
@@ -93,7 +105,9 @@ for i in range(len(list)):
             print('xsizeを超えましたよ〜')
             break
         if list[i][j] != 'nan':
-            hoge.append(j+1)
+            hoge.append((j+1)*0.01)
+            # hoge.append(j+1)
+
             hoge2.append(list[i][j])
     print(len(hoge))
     print(len(hoge2))
@@ -101,12 +115,14 @@ for i in range(len(list)):
             # plt.plot(list[i][j], label=list2[i], color=list_color[i])
             # plt.plot(j,list[i][j],'.' ,color=list_color[i])
     plt.plot(hoge, hoge2, label=list2[i], color=list_color[i])
-    plt.hlines(list_auc[i], 0, xsize, list_color[i], linestyles='dashed')  # hlines
-plt.xlabel('number of trees')
+    plt.hlines(list_auc[i], 0, xsize*0.01, list_color[i], linestyles='dashed')  # hlines
+plt.xlabel('contamination')
 plt.ylabel('AUC score')
 # plt.ylim(0, 0.225)
 # plt.xlim(0, 37)
-plt.legend(loc = "upper right")
+# plt.legend(loc='center right')
+plt.legend()
+
 plt.grid(True)
 plt.show()
 

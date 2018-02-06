@@ -116,10 +116,11 @@ def calc_FN(label, pred):
 #sfl             : sepaLabel == Trueのときデータをシャッフルするか否か bool
 #anomaly_rate    : 異常系含有率
 #max_samples     : サブサンプリング数
+#sample_nor      : 正常系のサンプル数　データサイズのみを変えたい時に使う　それ以外はNone
 
 def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False, nn_estimator = 100, sepaLabel = True,
          treeLabel = False, seed = 42, pcaLabel = False, n_comp = 2, sepa2 = False, time_label = False, stream = False,
-         sfl = False, anomaly_rate = None, max_samples = None):
+         sfl = False, anomaly_rate = None, max_samples = None, sample_nor = None):
 
     inf = float("inf")
     all_start = time.time()
@@ -163,6 +164,8 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
     clf.max_features = max_feat
     if max_samples != None:
         clf.max_samples = max_samples
+    else:
+        clf.max_samples = 1.
 
     if (str(filename) == '/home/anegawa/Dropbox/shuttle.mat'):
         clf.contamination = 0.07
@@ -235,6 +238,7 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
                 X_normal.append(X[i])
 
         #データ全体のcontaminationを操作
+        #基本使わないゾ！
         zentai = False
         anomaly_rate_all = None
         if zentai:
@@ -255,6 +259,12 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
                 X_anomaly = anomaly_hoge
                 X_normal = normal_hoge
 
+        if sample_nor != None:
+            X_normal = random.sample(X_normal, sample_nor)
+            cont = clf.contamination
+            sample_ano = (cont/(1-cont)) * sample_nor
+            X_anomaly = random.sample(X_anomaly, int(sample_ano))
+            # print("size : " + str(len(X_normal)+len(X_anomaly)))
 
         cutter_anomaly = len(X_anomaly) * rate
         cutter_normal = len(X_normal) * rate
@@ -707,7 +717,8 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
     # print("all_time : " + str(all_time))
 
     if time_label:
-        return all_time, pca_fit_time + pca_transform_train_time, fit_time, pca_transform_test_time, test_time, sum_train_time, sum_test_time
+        # return all_time, pca_fit_time + pca_transform_train_time, fit_time, pca_transform_test_time, test_time, sum_train_time, sum_test_time
+        return all_time
     elif treeLabel:
         # if math.isnan(auc2_roc):
         #     raise Exception("error! auc is NaN!.")
