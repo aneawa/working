@@ -167,6 +167,8 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
     else:
         clf.max_samples = 1.
 
+    # print(X.shape)
+
     if (str(filename) == '/home/anegawa/Dropbox/shuttle.mat'):
         clf.contamination = 0.07
 
@@ -722,8 +724,8 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
     elif treeLabel:
         # if math.isnan(auc2_roc):
         #     raise Exception("error! auc is NaN!.")
-        return auc2_roc
-        # return fnr
+        # return auc2_roc
+        return fnr
         # return fpr
 
     else:

@@ -64,31 +64,31 @@ list2 = ["http", "forestcover", "satellite", "arrhythmia", "ionosphere", "annthy
 list_color = ["r", "b", "g", "c", "m", "k", "y"]
 
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/arrhy1.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/arrhy0100.txt', 'r')
 for row in f:
     arrhythmia.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/http1.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/http0100.txt', 'r')
 for row in f:
     http.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/cover1.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/cover0100.txt', 'r')
 for row in f:
     cover.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/sate1.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/sate0100.txt', 'r')
 for row in f:
     satellite.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/iono1.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/iono0100.txt', 'r')
 for row in f:
     ionosphere.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/annth1.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/annth0100.txt', 'r')
 for row in f:
     annthyroid.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/pima1.txt', 'r')
+f = open('/home/anegawa/デスクトップ/sotuken/results/contamination/pima0100.txt', 'r')
 for row in f:
     pima.append(row[:-1])
 f.close()
@@ -105,7 +105,7 @@ for i in range(len(list)):
             print('xsizeを超えましたよ〜')
             break
         if list[i][j] != 'nan':
-            hoge.append((j+1)*0.01)
+            hoge.append((j+1)*1)
             # hoge.append(j+1)
 
             hoge2.append(list[i][j])
@@ -116,7 +116,7 @@ for i in range(len(list)):
             # plt.plot(j,list[i][j],'.' ,color=list_color[i])
     plt.plot(hoge, hoge2, label=list2[i], color=list_color[i])
     plt.hlines(list_auc[i], 0, xsize*0.01, list_color[i], linestyles='dashed')  # hlines
-plt.xlabel('contamination')
+plt.xlabel('contamination(%)')
 plt.ylabel('AUC score')
 # plt.ylim(0, 0.225)
 # plt.xlim(0, 37)
