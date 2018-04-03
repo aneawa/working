@@ -15,11 +15,11 @@ import time
 import re
 
 
-filename = '/home/anegawa/Dropbox/ionosphere.mat'
+filename = 'C:\Users\Riku Anegawa\Desktop/Dropbox/ionosphere.mat'
 sepaLabel = True
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/time/satellite_time2.txt', 'r')      #hoge
-fp = open('/home/anegawa/デスクトップ/sotuken/results/time/satellite_time_pca2.txt', 'r') #hogg
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/time/satellite_time2.txt', 'r')      #hoge
+fp = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/time/satellite_time_pca2.txt', 'r') #hogg
 diff = False
 tit = "satellite"
 

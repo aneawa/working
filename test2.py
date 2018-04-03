@@ -24,23 +24,23 @@ ionosphere = []
 
 list = [satellite, arrhythmia, mammography, pima, ionosphere]
 list2 = ["satellite", "arrhythmia", "mammography", "pima", "ionosphere"]
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_cont.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/arrhy_cont.txt', 'r')
 for row in f:
     arrhythmia.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_cont.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/pima_cont.txt', 'r')
 for row in f:
     pima.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/mammo_cont.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/mammo_cont.txt', 'r')
 for row in f:
     mammography.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_cont.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/sate_cont.txt', 'r')
 for row in f:
     satellite.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_cont.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/iono_cont.txt', 'r')
 for row in f:
     ionosphere.append(row[:-1])
 f.close()
@@ -88,7 +88,7 @@ plt.show()
 # plt.subplot(3, 1, 3)
 # sample = []
 # j = 0
-# for file in glob.glob('/home/anegawa/デスクトップ/sotuken/results/newer/pca/arrhy_tree2_sfl.txt'):
+# for file in glob.glob('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newer/pca/arrhy_tree2_sfl.txt'):
 #     # print(j)
 #     print(file)
 #     for line in open(file, 'r'):

@@ -33,32 +33,32 @@ list_color = ["r", "b", "g", "c", "m"]
 # list_color = ["r", "b", "g", "c", "m", "k", "y"]
 
 
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/arrhy_varAtt_auc.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/arrhy_varAtt_auc.txt', 'r')
 for row in f:
     arrhythmia_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/iono_varAtt_auc.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/iono_varAtt_auc.txt', 'r')
 for row in f:
     ionosphere_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/sate_varAtt_auc.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/sate_varAtt_auc.txt', 'r')
 for row in f:
     satellite_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/annth_varAtt_auc.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/annth_varAtt_auc.txt', 'r')
 for row in f:
     annthyroid_pr.append(row[:-1])
 f.close()
-f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/pima_varAtt_auc.txt', 'r')
+f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/pima_varAtt_auc.txt', 'r')
 for row in f:
     pima_pr.append(row[:-1])
 f.close()
 #
-# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/http_traincont_auc_0to1%.txt', 'r')
+# f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/http_traincont_auc_0to1%.txt', 'r')
 # for row in f:
 #     http.append(row[:-1])
 # f.close()
-# f = open('/home/anegawa/デスクトップ/sotuken/results/newest/base_data/cover_traincont_auc_0to1%.txt', 'r')
+# f = open('C:\Users\Riku Anegawa\Desktop/デスクトップ/sotuken/results/newest/base_data/cover_traincont_auc_0to1%.txt', 'r')
 # for row in f:
 #     cover.append(row[:-1])
 # f.close()

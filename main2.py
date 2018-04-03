@@ -1,4 +1,4 @@
-
+# coding:utf-8
 #filename : matファイルの絶対パス
 #Xtrains_percent : 訓練データの割合
 #maxfeature : max_features
@@ -14,7 +14,7 @@ import numpy as np
 hoge = 10
 hoge2 = 36
 auc = 0
-filename = '/home/anegawa/Dropbox/cover.mat'
+filename = 'C:\Users\Riku Anegawa\Desktop/Dropbox/ionosphere.mat'
 #all_result = [all, pca_train(fit+trans), fit, pca_test(trans), test, sum_train, sum_test]
 
 # for i in range(10, 110, 10):

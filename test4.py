@@ -16,7 +16,7 @@ import scipy.io
 import h5py
 
 tit = "kurtosis and variance of annthyroid"
-filename = '/home/anegawa/Dropbox/annthyroid.mat'
+filename = 'C:\Users\Riku Anegawa\Desktop/Dropbox/annthyroid.mat'
 
 mat = scipy.io.loadmat(filename)
 X = mat['X']

@@ -1,3 +1,5 @@
+# coding:utf-8
+
 import sys
 import math
 import random
@@ -127,7 +129,7 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
     rng = np.random.RandomState(seed)
 
     #httpとsmtpのみ別の方法でデータ取得
-    if filename == '/home/anegawa/Dropbox/http.mat' or filename == '/home/anegawa/Dropbox/smtp.mat':
+    if filename == 'C:\Users\Riku Anegawa\Desktop/Dropbox/http.mat' or filename == 'C:\Users\Riku Anegawa\Desktop/Dropbox/smtp.mat':
         mat = {}
         f = h5py.File(filename)
         for k, v in f.items():
@@ -169,37 +171,37 @@ def main(filename, xtrains_percent = 0.2, maxfeature = None, fit_ylabel = False,
 
     # print(X.shape)
 
-    if (str(filename) == '/home/anegawa/Dropbox/shuttle.mat'):
+    if (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/shuttle.mat'):
         clf.contamination = 0.07
 
-    elif (str(filename) == '/home/anegawa/Dropbox/http.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/http.mat'):
         clf.contamination = 0.004
 
-    elif (str(filename) == '/home/anegawa/Dropbox/pima.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/pima.mat'):
         clf.contamination = 0.35
 
-    elif (str(filename) == '/home/anegawa/Dropbox/mammography.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/mammography.mat'):
         clf.contamination = 0.02
 
-    elif (str(filename) == '/home/anegawa/Dropbox/cover.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/cover.mat'):
         clf.contamination = 0.009
 
-    elif (str(filename) == '/home/anegawa/Dropbox/breastw.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/breastw.mat'):
         clf.contamination = 0.35
 
-    elif (str(filename) == '/home/anegawa/Dropbox/arrhythmia.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/arrhythmia.mat'):
         clf.contamination = 0.15
 
-    elif (str(filename) == '/home/anegawa/Dropbox/ionosphere.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/ionosphere.mat'):
         clf.contamination = 0.36
 
-    elif (str(filename) == '/home/anegawa/Dropbox/satellite.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/satellite.mat'):
         clf.contamination = 0.32
 
-    elif (str(filename) == '/home/anegawa/Dropbox/annthyroid.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/annthyroid.mat'):
         clf.contamination = 0.07
 
-    elif (str(filename) == '/home/anegawa/Dropbox/smtp.mat'):
+    elif (str(filename) == 'C:\Users\Riku Anegawa\Desktop/Dropbox/smtp.mat'):
         clf.contamination = 0.03 / 100
 
     else:
